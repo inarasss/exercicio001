@@ -53,7 +53,7 @@ jobs:
 
       - name: Registrar duracao
         if: always()
-        run: echo "Duracao: $(($(date +%s) -START_TIME))s"
+        run: echo "Duracao: $(($(date +%s) - START_TIME))s"
 
       - name: Publicar resumo
         if: always()
