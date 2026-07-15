@@ -30,6 +30,10 @@ jobs:
       run:
         working-directory: backend
     steps:
+      - name: Registrar inicio 
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+        run: npm test
+
       - name: Checkout do código
         uses: actions/checkout@v4
 
@@ -47,6 +51,20 @@ jobs:
       - name: Rodar testes
         run: npm test
 
+      - name: Registrar duracao
+        if: always()
+        run: echo "Duracao: $(($(date +%s) -START_TIME))s"
+
+      - name: Publicar resumo
+        if: always()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          ## Metricas da Pipeline
+          | Metrica | Valor |
+          |---------|-------|
+          | Duracao | ${DURATION}s |
+          | Status | ${{ job.status }} |
+          EOF
   # ---------- 2. BUILD + PUSH DA IMAGEM DOCKER ----------
   # Só roda depois dos testes passarem e apenas em push na main.
   docker:
